@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AWS Shopping Application</title>
+</head>
+<body>
+    <h1>AWS Multi-Tier Shopping Application</h1>
+
+    <h2>Available Products</h2>
+
+    {% for product in products %}
+    <div>
+        <h3>{{ product.name }}</h3>
+        <p>Price: ₹{{ product.price }}</p>
+        <a href="/create-order/{{ product.id }}">Place Order</a>
+    </div>
+    {% endfor %}
+
+</body>
+</html>

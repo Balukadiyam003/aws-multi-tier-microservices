@@ -1,0 +1,36 @@
+
+services:
+
+  product-service:
+    build: ./product-service
+    container_name: product-service
+    ports:
+      - "5001:5001"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5001/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  order-service:
+    build: ./order-service
+    container_name: order-service
+    ports:
+      - "5002:5002"
+    environment:
+      PRODUCT_SERVICE_URL: http://product-service:5001
+    depends_on:
+      product-service:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "5000:5000"
+    environment:
+      PRODUCT_SERVICE_URL: http://product-service:5001
+      ORDER_SERVICE_URL: http://order-service:5002
+    depends_on:
+      - product-service
+      - order-service
